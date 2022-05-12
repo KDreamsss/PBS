@@ -1,0 +1,13 @@
+{% autoescape off %}  
+Hi {{ user }},  
+
+Your order of photoshoot service with {{ photographer }} has been rejected due to unavailable time.
+
+Here is the order details:
+Photographer: {{ photographer }}
+Date of photoshoot: {{ date }}
+Place of photoshoot: {{ place }}
+This order was made on {{ made }}
+
+http://{{ domain }}/order
+{% endautoescape %} 

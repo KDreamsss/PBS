@@ -1,0 +1,130 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="icon" type="image/png" href="https://storage.googleapis.com/bytewalk/icon.png" />
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
+	<link rel="stylesheet" type="text/css" href="https://storage.googleapis.com/bytewalk/profilepage.css">
+	<link rel="stylesheet" type="text/css" href="https://storage.googleapis.com/bytewalk/styles.css">
+	<!-- Add icon library -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	{% block cssfiles %}{% endblock cssfiles %}
+	<title>APIU-PBS</title>
+</head>
+
+<body>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+		<p class="navbar-brand ml-4 mr-4" href="#"><b>APIU-Photoshot Booking System</b></p>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+			aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+			<div class="navbar-nav ml-4 mr-4">
+				<a class="nav-item nav-link" href="{% url 'home' %}">Home</a>
+
+				{% if user.is_authenticated %}
+					{% if user.is_staff %}
+					<a class="nav-item nav-link" href="{% url 'users_list' %}">List of User</a>
+					{% endif %}
+				<!-- <div class="dropdown">
+					{% if user.to_user.all.count >= 1 %}
+					<a class="nav-item nav-link  dropdown-toggle" type="button" id="dropdownMenuButton"
+						data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="cursor: pointer;">
+						Friends ({{ user.to_user.all.count }})
+					</a>
+					{% else %}
+					<a class="nav-item nav-link  dropdown-toggle" type="button" id="dropdownMenuButton"
+						data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="cursor: pointer;">
+						Friends
+					</a>
+					{% endif %}
+					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+						<a class="dropdown-item" href="{% url 'friend_list' %}">Friends</a>
+						<a class="dropdown-item" href="{% url 'users_list' %}">Add new friend</a>
+						
+						{% if user.to_user.all.count >= 1 %}
+						<a class="dropdown-item" href="{% url 'friend_request_list' %}">Recieved Request ({{ user.to_user.all.count }}) </a>
+						{% endif %}
+					</div>
+				</div> -->
+
+				<div class="dropdown">
+					
+					{% if user.photographer_user.count_order >= 1 %}
+					<a class="nav-item nav-link  dropdown-toggle" type="button" id="dropdownMenuButton"
+						data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="cursor: pointer;">
+						Photographer ({{user.photographer_user.count_order}})
+					</a>
+					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+						<a class="dropdown-item" href="{% url 'photographers_list' %}">Reserve Photographer</a>
+						<a class="dropdown-item" href="{% url 'order' %}">Appointments ({{user.photographer_user.count_order}})</a>
+						<!-- <a class="dropdown-item" href="{% url 'order-history' %}">Appointment History</a> -->
+					</div>
+					{% else %}
+					<a class="nav-item nav-link  dropdown-toggle" type="button" id="dropdownMenuButton"
+						data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="cursor: pointer;">
+						Photographer
+					</a>
+					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+						<a class="dropdown-item" href="{% url 'photographers_list' %}">Reserve Photographer</a>
+						<a class="dropdown-item" href="{% url 'order' %}">Appointments</a>
+						<!-- <a class="dropdown-item" href="{% url 'order-history' %}">Appointment History</a> -->
+					</div>
+					
+					{% endif %}
+				</div>
+				<div class="dropdown">
+					<a class=" nav-item nav-link  dropdown-toggle" type="button" id="dropdownMenuButton"
+						data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="cursor: pointer;">
+						Profile
+					</a>
+					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+						<a class="dropdown-item" href="{% url 'my_profile' %}">User: {{user.username}}</a>
+						{% if user.photographer_user %}
+						<a class="dropdown-item" href="{% url 'photographer_profile' %}">Photographer Profile</a>
+						{% else %}
+						<a class="dropdown-item" href="{% url 'create_photographer' %}">Become a Photographer</a>
+						{% endif %}
+					</div>
+				</div>
+
+				{% if user.photographer_user %}
+				<a class="nav-item nav-link" href="{% url 'post-create' %}">Create Post <i class="fa fa-plus-circle"
+						style="font-size: 20px;"></i></a>
+				{% endif %}
+				{% block searchform %}{% endblock searchform %}
+				<a class="nav-item nav-link float-right" href="{% url 'logout' %}" style="padding: 12px 16px">Logout</a>
+				{% else %}
+				<a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
+				<a class="nav-item nav-link" href="{% url 'register' %} ">Register</a>
+				{% endif %}
+			</div>
+		</div>
+	</nav>
+
+	<div class="container">
+		{% block content %}{% endblock content %}
+	</div>
+
+	<footer class="page-footer font-small black"
+		style="height: 90px; padding: 10px 10px 0px 10px; width: 100%; background: #222;">
+		<div class="footer-copyright text-center py-3 text-muted">APIU-PBS © 2022
+			<br><small class="text-muted">All rights reserved!</small>
+			<small class="text-muted"><a href="mailto:aiupbs2022@gmail.com">Contact Us</a></small>
+		</div>
+	</footer>
+
+	<!-- JS Files -->
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+	{% block jsfiles %}{% endblock jsfiles %}
+</body>
+
+</html>

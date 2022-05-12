@@ -1,0 +1,28 @@
+{% extends "feed/layout.html" %} {% load static %}
+{% block content %}
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+      <div class="card card-signin my-5">
+        <div class="card-body">
+          <h5 class="card-title text-center">
+            <b>Make a report about post</b>
+          </h5>
+          <P>Please include the screenshot of post and write report details. If you are in the post and it againt your privacy, please highlight it in the screenshot and attach a proof in the email.</P>
+          <form class="form-signin">
+            <div class="form-group">
+              <a
+                class="btn btn-lg btn-info btn-block text-uppercase"
+                href="mailto: 'aiupbs2022@gmail.com'"
+                >Make a report</a
+              >
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %} 

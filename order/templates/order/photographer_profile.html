@@ -1,0 +1,37 @@
+{% extends "feed/layout.html" %} {% load static %} {% block cssfiles %} {% endblock cssfiles %} {% block content %}
+    
+    <div class="main-content">
+      <div class="container mt-7"></div>
+        <div class="row justify-content-md-center">
+          <div class="col-md-8">
+            <div class="card card-signin my-5">
+              <a href="{{ request.user.profile.get_absolute_url }}" style="text-align: center;">
+                <img class="rounded-circle"
+                width="160px"
+                height="160px"
+                  src="{{ request.user.profile.image.url }}" alt="" /></a>
+              <div class="card-body">
+                
+            {% if photographer %}
+        
+                <h5 class="card-title text-center">{{ photographer.user }}</h5>
+                <p class="card-text text-left">Devices: {{ photographer.devices }}</p>
+                <p class="card-text text-left">Editting Application: {{ photographer.application }}</p>
+                <p class="card-text text-left">Price: {{ photographer.price }}</p>
+                <p class="card-text text-left">Experience: {{ photographer.experience }}</p>
+              </div>
+
+              <div class="card-footer text-center">
+                <a class="btn btn-info" href="{% url 'edit_photographer' %}">Update Information</a>
+            {% else%}
+                <a class="btn btn-info" href="{% url 'create_photographer' %}">Register as a photographer</a>
+            {% endif %}
+              </div>
+      
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    {% endblock content %} {% block jsfiles %}{% endblock jsfiles %}

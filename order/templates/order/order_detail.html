@@ -1,0 +1,47 @@
+{% extends "feed/layout.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block cssfiles %}
+{% endblock cssfiles %}
+
+{% block content %}
+<div class="container">
+	<div class="row">
+		<div class="col-md-8">
+			<div class="card card-signin my-5">
+				<div class="card-body">
+					<a href="{{ order.from_user1.profile.get_absolute_url }}"><img
+							src="{{ order.from_user1.profile.image.url }}" class="rounded-circle" width="30" height="30"
+							alt=""></a>
+					<a class="text-dark" href="{{ order.from_user1.profile.get_absolute_url }}"><b class="ml-2">{{ order.from_user1 }}</b></a>
+					<br><small class="text-muted">Reserved on {{ order.timestamp }}</small>
+					<br><br>
+					<p class="card-text text-dark">Photographer's Name: {{order.to_user1}}</p>
+					<br>
+					<p class="card-text text-dark">Location: {{order.place}}</p>
+					<br>
+					<p class="card-text text-dark">Date for Photoshoot: {{order.date}}</p>
+					<br>
+					<p class="card-text text-dark">Time for Photoshoot: {{order.start_time}} to {{order.end_time}}</p>
+					<br>
+					<p class="card-text text-dark">Photoshoot Description: {{order.description}}</p>
+					<br>
+					<p class="card-text text-dark">Status: {{order.status}}</p>
+				</div>
+				
+				<button class="btn btn-white mr-3 like" id="{{ order.id }}">
+					{% if order.from_user1 == user and order.status == "Pending" %}
+					<a class="btn btn-outline-info mr-3" href="{% url 'order-update' order.id%}">Update</a>
+					<a class="btn btn-outline-danger mr-3" href="{% url 'order-delete' order.id%}">Cancel order</a>
+					{% endif %}
+					{% if order.to_user1.user == user %}
+					<a class="btn btn-outline-info mr-3" href="{% url 'order-accept' order.id%}">Accept</a>
+					<a class="btn btn-outline-danger mr-3" href="{% url 'order-reject' order.id%}">Reject</a>
+					{% endif %}
+					<a class="btn btn-outline-info mr-3" href="{% url 'order' %}">Back</a>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock content %}

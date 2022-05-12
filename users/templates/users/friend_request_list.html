@@ -1,0 +1,72 @@
+{% extends "feed/layout.html" %}
+{% load static %}
+{% block cssfiles %}
+{% endblock cssfiles %}
+{% block content %}
+
+<div class="container">
+  {% if rec_follow_requests.count >= 1 %}
+  <div class="card card-signin my-5">
+    <div class="card-body">
+      <h2>Follow Requests Recieved ({{ rec_follow_requests.count }})</h2>
+      <hr class="my-2" />
+      {% if not rec_follow_requests %}
+      <h5><i>No recieved requests!</i></h5>
+      {% else %} {% for r_request in rec_follow_requests %}
+      <a href="{{ r_request.from_user.profile.get_absolute_url }}"><img
+          src="{{ r_request.from_user.profile.image.url }}" class="rounded mr-2" width="40" height="40" alt="" /></a>
+      <a class="mr-2 align-middle" href="{{ r_request.from_user.profile.get_absolute_url }}"><b>{{ r_request.from_user.username }}</b>
+      </a>
+      <small class="float-right">
+        <a class="btn btn-success mr-2" href="/users/follow-request/accept/{{ r_request.from_user.id }}">Accept</a>
+        <a class="btn btn-danger" href="/users/follow-request/delete/{{ r_request.from_user.id }}">Reject</a>
+      </small>
+      <br /><br />
+      {% endfor %} {% endif %}
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- <div class="card card-signin my-5">
+    <div class="card-body">
+      <h2>Follow Requests Sent ({{ sent_follow_requests.count }})</h2>
+      <hr class="my-2" />
+      {% if not sent_follow_requests %}
+      <h5><i>No sent requests!</i></h5>
+      {% else %} {% for s_request in sent_follow_requests %}
+      <a href="{{ s_request.to_user.profile.get_absolute_url }}"><img src="{{ s_request.to_user.profile.image.url }}"
+          class="rounded mr-2" width="40" height="40" alt="" /></a>
+      <a class="mr-2 align-middle" href="{{ s_request.to_user.profile.get_absolute_url }}"><b>{{ s_request.to_user.username }}</b></a>
+      <small class="float-right">
+        <a class="btn btn-warning mr-2" href="{% url 'cancel_follow_request' s_request.to_user.id %}">Cancel</a>
+      </small>
+      <br /><br />
+      {% endfor %} {% endif %}
+    </div>
+  </div> -->
+
+</div>
+
+{% if is_paginated %}
+
+{% if page_obj.has_previous %}
+<a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+<a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+{% endif %}
+
+{% for num in page_obj.paginator.page_range %}
+{% if page_obj.number == num %}
+<a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+{% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %} <a class="btn btn-outline-info mb-4"
+  href="?page={{ num }}">{{ num }}</a>
+  {% endif %}
+  {% endfor %}
+
+  {% if page_obj.has_next %}
+  <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
+  <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+  {% endif %}
+
+  {% endif %}
+
+  {% endblock content %}

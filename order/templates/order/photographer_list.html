@@ -1,0 +1,71 @@
+{% extends "feed/layout.html" %} {% load static %} {% block cssfiles %} {% endblock cssfiles %} {% block content %}
+
+{% if messages %}
+<div class="alert alert-success text-center" role="alert">
+  <h4 class="alert-heading"> Message </h4>
+      {% for message in messages %}
+      <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+      {% endfor %}
+</div>
+{% endif %}
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8">
+        {% if photographers %}
+                <div class="card card-signin my-5">
+                  <div class="card-body">
+                    {% for p in photographers %}                   
+                          <a href="{{ p.user.profile.get_absolute_url }}"><img src="{{ p.user.profile.image.url }}" class="rounded mr-2" width="40"
+                              height="40" alt="" /></a>
+                          <a class="text-dark" href="{{ user.user.profile.get_absolute_url }}"><b>Photographer's name: {{ p.user }}</b></a>
+                          <br><br>
+                          <p>Devices: {{ p.devices }}</p> <br>
+                          <p>Application for Edit: {{ p.application }}</p> <br>
+                          <p>Price: {{ p.price }} </p> <br>
+                          <p>Experience: {{ p.experience }}</p> <br>
+
+                      {% if not user.user in sent %}
+                      <small class="float-right">
+                        <a class="btn btn-primary mr-2" href="{% url 'order-create' p.id %}">Make appointments</a>
+                      </small>
+                      {% endif %}
+                    <br /><br />
+                    {% endfor %}
+                  </div>
+                </div>
+        {% else %}
+              <h5><i>No photographer available now! Please come back later!</i></h5>
+        {% endif %}
+      </div>
+      <div class="col-md-4">
+        <div class="card card-signin my-5">
+          <b class="text-center">My Profile</b> 
+          <a href="{{ request.user.profile.get_absolute_url }}" style="text-align: center;">
+            <img class="rounded-circle"
+            width="160px"
+            height="160px"
+              src="{{ request.user.profile.image.url }}" alt="" /></a>
+          <div class="card-body">
+            
+        {% if photographer %}   
+            <h5 class="card-title text-center">{{ photographer.user }}</h5>
+            <p class="card-text text-center">{{ photographer.devices }}</p>
+            <p class="card-text text-center">{{ photographer.application }}</p>
+            <p class="card-text text-center">Price: {{ photographer.price }}</p>
+            <p class="card-text text-center">{{ photographer.experience }}</p>
+          </div>
+          <div class="card-footer text-center">
+            <a class="btn btn-info" href="{% url 'edit_photographer' %}">Update Information</a>
+          </div>
+        {% else%}
+          <div class="card-footer text-center">
+            <a class="btn btn-info" href="{% url 'create_photographer' %}">Register as a photographer</a>
+          </div> 
+        {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  {% endblock content %} {% block jsfiles %}{% endblock jsfiles %}

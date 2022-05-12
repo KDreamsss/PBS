@@ -1,0 +1,142 @@
+{% extends "feed/layout.html" %} {% load static %} {% block cssfiles %} {% endblock cssfiles %} {% block content %}
+
+{% if messages %}
+<div class="alert alert-success text-center" role="alert">
+  <h4 class="alert-heading"> Message </h4>
+      {% for message in messages %}
+      <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+      {% endfor %}
+</div>
+{% endif %}
+
+<div class="main-content">
+  <br>
+  <div class="container mt-7">
+    <div class="row">
+      <div class="col-xl-8 m-auto order-xl-2 mb-5 mb-xl-0">
+        <div class="card card-profile shadow">
+          <div class="row justify-content-center">
+            <div class="col-lg-3 order-lg-2">
+              <br>
+              <div class="card-profile-image">
+                <a href="{{ u.profile.image.url }}">
+                  <img src="{{ u.profile.image.url }}" class="rounded-circle" width="160px" height="160px" />
+                </a>
+              </div>
+            </div>
+          </div>              
+          <div class="card-body pt-0 pt-md-4">
+            <div class="row">
+              <div class="col">
+                <div class="card-profile-stats d-flex justify-content-center mt-md-5">
+                  <div>
+                    <!-- <span class="heading">{{ u.profile.friends.count }}</span>
+                    {% if request.user == u %}
+                    <span class="description"><a href="{% url 'friend_list' %}">Friends</a></span>
+                    {% else %}
+                    <span class="description">Friends</span>
+                    {% endif %} -->
+                    <span class="heading">{{ post_count }}</span>
+                    <span class="description"><a href="{% url 'user-posts' u.username %}">Posts</a></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+       
+            <div class="text-center">
+              <h3>{{ u }}</h3>
+              Contact Email: <a href="mailto:{{ u.email }}">{{ u.email }}</a>
+              <p>{{ u.profile.bio }}</p>
+
+              {% if request.user == u %}
+              <hr class="my-2" />
+              <a class="btn btn-info" href="{% url 'edit_profile' %}">Edit Profile</a>
+              {% if user.photographer_user.all.first.user.pk == u.user.pk %}
+              <a class="btn btn-info" href="{% url 'edit_photographer' %}">Edit Photographer Profile</a>
+              {% endif %}
+              {% endif %}
+              {% if request.user.is_staff %}
+              <hr class="my-2" />
+              <small><a class="btn btn-danger" href="/users/delete/{{ u.id }}">Delete</a></small>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br />
+   
+
+    <div class="container">
+      <div class="row">
+        {% for post in posts %}
+        <div class="col-lg-4 col-md-12 mb-4 mb-lg-0">
+          <div class="card card-signin my-5">
+            <div class="card-body">
+              <a href="{{ post.user_name.profile.get_absolute_url }}"><img src="{{ post.user_name.profile.image.url }}"
+                  class="rounded-circle" width="30" height="30" alt=""></a>
+              <a class="text-dark" href="{{ post.user_name.profile.get_absolute_url }}"><b>{{ post.user_name }}</b></a>
+              <br><small class="text-muted">Posted on {{ post.date_posted }}</small>
+              <br><br>
+              <p class="card-text text-dark">{{ post.description }}</p>
+            </div>
+            <a href="{% url 'post-detail' post.id %}"><img class="card-img-top" src="{{ post.pic.url }}" alt=""></a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    {% if is_paginated %}
+
+    {% if page_obj.has_previous %}
+    <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+    <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+    {% if page_obj.number == num %}
+    <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %} <a class="btn btn-outline-info mb-4"
+      href="?page={{ num }}">{{ num }}</a>
+      {% endif %}
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+      <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
+      <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+      {% endif %}
+
+      {% endif %}
+  </div>
+</div>
+
+{% endblock content %} 
+
+{% block jsfiles %}
+<script>
+	$(".like").click(function (e) {
+    var id = this.id;
+    var href = $('.like').find('a').attr('href');
+    e.preventDefault();
+
+    $.ajax({
+        url: href,
+        data: {
+          'likeId': id
+        },
+        success: function(response){
+          location.reload()
+          if(response.liked){
+            $('#likebtn' + id).html("Unlike | {{post.likes.count}}");
+            $('#likebtn' + id).css("color", "red")
+          }
+          else{
+            $('#likebtn' + id).html("Like | {{post.likes.count}}");
+            $('#likebtn' + id).css("color", "green")
+          }
+        }
+      })
+});
+</script>
+{% endblock jsfiles %}

@@ -1,0 +1,191 @@
+{% extends "feed/layout.html" %}
+{% load static %}
+{% block cssfiles %}
+{% endblock cssfiles %}
+{% block content %}
+
+{% if messages %}
+<div class="alert alert-success text-center" role="alert">
+  <h4 class="alert-heading"> Message </h4>
+  {% for message in messages %}
+  <p{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</p>
+    {% endfor %}
+</div>
+{% endif %}
+
+
+{% if user.is_staff %}
+  <div class="container">
+    <div class=" row ">
+      <div class="col">
+        <div class="card card-signin my-5">
+          <div class="card-header">
+            <h2>List of Appoinments</h2>
+          </div>
+          {% for order in orders %}
+          {% if user.is_staff %}
+          <div class="card-body">
+            <a href="{{ order.from_user1.profile.get_absolute_url }}"><img src="{{ order.from_user1.profile.image.url }}"
+                class="rounded-circle" width="30" height="30" alt=""></a>
+            <a class="text-dark" href="{{ order.from_user1.profile.get_absolute_url }}"><b
+                class="ml-2">{{order.from_user1}}</b></a>
+            <br>
+            <small class="text-muted">Resevation made on {{order.timestamp}}</small>
+            <br><br>
+            <p class="card-text text-dark">Photographer's Name: {{order.to_user1}}</p>
+            <p class="card-text text-dark">Date for Photoshoot: {{order.date}}</p>
+
+            <a class="btn btn-primary mr-2" href="{% url 'order-detail' order.id%}">View Details</a>
+            <hr class="my-3" />
+            <br><br>
+          </div>
+          {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% elif user.photographer_user %}
+
+<div class="container">
+  <div class="card card-signin my-5">
+    <div class="card-header">
+      <h2>Appointment Requests Recieved</h2>
+    </div>
+    {% for order in orders %}
+    {% if order.to_user1.user == user and order.status == 'Pending' %}
+    <div class="card-body">
+      <a href="{{ order.from_user1.profile.get_absolute_url }}"><img src="{{ order.from_user1.profile.image.url }}"
+          class="rounded-circle" width="30" height="30" alt=""></a>
+      <a class="text-dark" href="{{ order.from_user1.profile.get_absolute_url }}"><b
+          class="ml-2">{{order.from_user1}}</b></a>
+      <br>
+      <small class="text-muted">Resevation made on {{order.timestamp}}</small>
+      <br><br>
+      <p class="card-text text-dark">Photographer's name: {{order.to_user1.user}}</p>
+      <p class="card-text text-dark">Date for photo shoot: {{order.date}}</p>
+
+      <a class="btn btn-primary mr-2" href="{% url 'order-detail' order.id%}">View Details</a>
+      <br><br>
+      <hr class="my-2" />
+    </div>  
+    {% endif %}
+    {% endfor %}       
+  </div>
+</div>   
+
+
+<div class="container">
+  <div class="card card-signin my-5">     
+    <div class="card-header">
+      <h2>Appointment Request Accepted</h2>
+    </div>
+    {% for order in orders %}
+    {% if order.to_user1.user == user and order.status == 'Accepted' %}  
+    <div class="card-body">
+      <a href="{{ order.from_user1.profile.get_absolute_url }}"><img src="{{ order.from_user1.profile.image.url }}"
+          class="rounded-circle" width="30" height="30" alt=""></a>
+      <a class="text-dark" href="{{ order.from_user1.profile.get_absolute_url }}"><b
+          class="ml-2">{{order.from_user1}}</b></a>
+      <br>
+      <small class="text-muted">Resevation made on {{order.timestamp}}</small>
+      <br><br>
+      <p class="card-text text-dark">Photographer's name: {{order.to_user1.user}}</p>
+      <p class="card-text text-dark">Date for photo shoot: {{order.date}}</p>
+
+      <a class="btn btn-primary mr-2" href="{% url 'order-detail' order.id%}">View Details</a>
+      <hr class="my-2" />
+      <br><br>
+    </div>
+    {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+{% else %}
+  <div class="container">
+    <div class="card card-signin my-5">
+      <div class="card-header">
+        <h2>Appointment Requests Pending</h2>
+      </div>
+      {% for order in orders %}
+      {% if order.from_user1 == user and order.status == 'Pending'%}
+        <div class="card-body">
+          <a href="{{ order.from_user1.profile.get_absolute_url }}"><img src="{{ order.from_user1.profile.image.url }}"
+              class="rounded-circle" width="30" height="30" alt=""></a>
+          <a class="text-dark" href="{{ order.from_user1.profile.get_absolute_url }}"><b
+              class="ml-2">{{order.from_user1}}</b></a>
+          <br>
+          <small class="text-muted">Resevation made on {{order.timestamp}}</small>
+          <br><br>
+          <p class="card-text text-dark">Photographer's Name: {{order.to_user1.user}}</p>
+          <p class="card-text text-dark">Date for Photoshoot: {{order.date}}</p>
+
+          <a class="btn btn-primary mr-2" href="{% url 'order-detail' order.id%}">View Details</a>
+          <hr class="my-3" />
+          <br><br>
+        </div>
+      {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="card card-signin my-5">
+      <div class="card-header">
+        <h2>Appointment Requests Accepted</h2>
+      </div>
+      {% for order in orders %}
+      {% if order.from_user1 == user and order.status == 'Accepted'%}
+        <div class="card-body">
+          <a href="{{ order.from_user1.profile.get_absolute_url }}"><img src="{{ order.from_user1.profile.image.url }}"
+              class="rounded-circle" width="30" height="30" alt=""></a>
+          <a class="text-dark" href="{{ order.from_user1.profile.get_absolute_url }}"><b
+              class="ml-2">{{order.from_user1}}</b></a>
+          <br>
+          <small class="text-muted">Resevation made on {{order.timestamp}}</small>
+          <br><br>
+          <p class="card-text text-dark">Photographer's Name: {{order.to_user1.user}}</p>
+          <p class="card-text text-dark">Date for Photoshoot: {{order.date}}</p>
+
+          <a class="btn btn-primary mr-2" href="{% url 'order-detail' order.id%}">View Details</a>
+          <hr class="my-3" />
+          <br><br>
+        </div>
+      {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="card card-signin my-5">
+      <div class="card-header">
+        <h2>Appointment Requests Rejected</h2>
+      </div>
+      {% for order in orders %}
+      {% if order.from_user1 == user and order.status == 'Rejected'%}
+        <div class="card-body">
+          <a href="{{ order.from_user1.profile.get_absolute_url }}"><img src="{{ order.from_user1.profile.image.url }}"
+              class="rounded-circle" width="30" height="30" alt=""></a>
+          <a class="text-dark" href="{{ order.from_user1.profile.get_absolute_url }}"><b
+              class="ml-2">{{order.from_user1}}</b></a>
+          <br>
+          <small class="text-muted">Resevation made on {{order.timestamp}}</small>
+          <br><br>
+          <p class="card-text text-dark">Photographer's Name: {{order.to_user1.user}}</p>
+          <p class="card-text text-dark">Date for Photoshoot: {{order.date}}</p>
+
+          <a class="btn btn-primary mr-2" href="{% url 'order-detail' order.id%}">View Details</a>
+          <a class="btn btn-danger mr-3" href="{% url 'order-delete' order.id%}">Delete</a>
+          <hr class="my-3" />
+          <br><br>
+        </div>
+      {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
+{% endif %}
+
+{% endblock content %}
